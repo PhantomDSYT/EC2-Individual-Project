@@ -21,10 +21,11 @@ namespace EC2_1908764.Models
 
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Please enter manufactured date.")]
-        [Display(Name = "Manufactured Date")]
+        [Display(Name = "Release Date")]
         public DateTime ManufactureDate { get; set; }
 
         [Required(ErrorMessage = "Enter the quantity.")]
+        [Display(Name = "Available")]
         public int Quantity { get; set; }
 
         [DataType(DataType.Currency)]

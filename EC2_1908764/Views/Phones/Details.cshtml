@@ -3,54 +3,23 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var photoPath = "~/images/phones/" + (Model.Image ?? "noimage.jpg");
+    var photoPath = "~/images/phones/" + (Model.Image ?? "noimage.png");
 }
 
 <h1>Details</h1>
-
-<div>
-    <h4>Phones</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Brand)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Brand)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Model)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Model)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ManufactureDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ManufactureDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<hr />
+<div class="row">
+    <div class="col-lg-6">
+        <img style="height:500px" src="@photoPath" asp-append-version="true" />
+    </div>
+    <div class="col-lg-6">
+        <h1 class="pb-md-5 pt-md-3">@Html.DisplayFor(model => model.Brand) @Html.DisplayFor(model => model.Model)</h1>
+        <h5 class="pt-md-5">
+            @Html.DisplayNameFor(model => model.ManufactureDate): @Html.DisplayFor(model => model.ManufactureDate) <br />
+            <h5 class="py-md-4">@Html.DisplayNameFor(model => model.Quantity): @Html.DisplayFor(model => model.Quantity)</h5>
+        </h5>
+        <h3 class="align-text-bottom py-xl-5 ">@Html.DisplayFor(model => model.Price)</h3>
+        <a asp-action="Index" class="btn btn-info btn-lg"> << Return</a>
+        <a class="btn btn-success btn-lg">Purchase</a>
+    </div>
 </div>
