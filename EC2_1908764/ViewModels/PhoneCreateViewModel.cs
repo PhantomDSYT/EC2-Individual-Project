@@ -14,12 +14,12 @@ namespace EC2_1908764.ViewModels
         public string Brand { get; set; }
 
         [DataType(DataType.Text)]
-        [Required(ErrorMessage = "Please enter model."), MaxLength(15)]
+        [Required(ErrorMessage = "Please enter model."), MaxLength(30)]
         public String Model { get; set; }
 
         [DataType(DataType.Date)]
         [Required(ErrorMessage = "Please enter manufactured date.")]
-        [Display(Name = "Manufactured Date")]
+        [Display(Name = "Release Date")]
         public DateTime ManufactureDate { get; set; }
 
         [Required(ErrorMessage = "Enter the quantity.")]

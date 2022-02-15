@@ -23,7 +23,7 @@ namespace EC2_1908764.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult AboutUS()
         {
             return View();
         }

@@ -16,7 +16,7 @@ namespace EC2_1908764.Models
         public string Brand { get; set; }
 
         [DataType(DataType.Text)]
-        [Required(ErrorMessage = "Please enter model."), MaxLength(15)]
+        [Required(ErrorMessage = "Please enter model."), MaxLength(30)]
         public String Model { get; set; }
 
         [DataType(DataType.Date)]

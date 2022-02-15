@@ -16,10 +16,10 @@ namespace EC2_1908764.Controllers
     public class PhonesController : Controller
     {
         private readonly EC2_1908764Context _context;
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IWebHostEnvironment hostingEnvironment;
 
         public PhonesController(EC2_1908764Context context,
-                                IHostingEnvironment hostingEnvironment)
+                                IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             this.hostingEnvironment = hostingEnvironment;
@@ -64,16 +64,8 @@ namespace EC2_1908764.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniquefilename = null;
-                if(pmodel.Photo != null)
-                {
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images", "phones");
-                    uniquefilename = Guid.NewGuid().ToString() + "_" + pmodel.Photo.FileName;
-                    string filepath = Path.Combine(uploadsFolder, uniquefilename);
-                    FileStream fs = new FileStream(filepath, FileMode.Create);
-                    pmodel.Photo.CopyTo(fs);
-                    fs.Close();
-                }
+                string uniquefilename = ProcessUploadedFile(pmodel);
+
                 Phones phones = new Phones
                 {
                     Brand = pmodel.Brand,
@@ -99,11 +91,24 @@ namespace EC2_1908764.Controllers
             }
 
             var phones = await _context.Phones.FindAsync(id);
+
+            PhoneEditViewModel phoneEditViewModel = new PhoneEditViewModel
+            {
+                ID = phones.ID,
+                Brand = phones.Brand,
+                Model = phones.Model,
+                ManufactureDate = phones.ManufactureDate,
+                Quantity = phones.Quantity,
+                Price = phones.Price,
+                ExistingPhotoPath = phones.Image
+
+            };
+
             if (phones == null)
             {
                 return NotFound();
             }
-            return View(phones);
+            return View(phoneEditViewModel);
         }
 
         // POST: Phones/Edit/5
@@ -111,9 +116,9 @@ namespace EC2_1908764.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Brand,Model,ManufactureDate,Quantity,Price,Image")] Phones phones)
+        public async Task<IActionResult> Edit(PhoneEditViewModel pmodel)
         {
-            if (id != phones.ID)
+            if (!PhonesExists(pmodel.ID))
             {
                 return NotFound();
             }
@@ -122,12 +127,29 @@ namespace EC2_1908764.Controllers
             {
                 try
                 {
-                    _context.Update(phones);
+                    var phone = await _context.Phones.FindAsync(pmodel.ID);
+                    phone.Brand = pmodel.Brand;
+                    phone.Model = pmodel.Model;
+                    phone.ManufactureDate = pmodel.ManufactureDate;
+                    phone.Quantity = pmodel.Quantity;
+                    phone.Price = pmodel.Price;
+                    if(pmodel.Photo != null)
+                    {
+                        if(pmodel.ExistingPhotoPath != null)
+                        {
+                            String filepath = Path.Combine(hostingEnvironment.WebRootPath, "images", "phones", pmodel.ExistingPhotoPath);
+                            System.IO.File.Delete(filepath);
+
+                        }
+                        phone.Image = ProcessUploadedFile(pmodel);
+                    }
+                    
+                    _context.Update(phone);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PhonesExists(phones.ID))
+                    if (!PhonesExists(pmodel.ID))
                     {
                         return NotFound();
                     }
@@ -138,7 +160,23 @@ namespace EC2_1908764.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(phones);
+            return View();
+        }
+
+        private string ProcessUploadedFile(PhoneCreateViewModel pmodel)
+        {
+            string uniquefilename = null;
+            if (pmodel.Photo != null)
+            {
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images", "phones");
+                uniquefilename = Guid.NewGuid().ToString() + "_" + pmodel.Photo.FileName;
+                string filepath = Path.Combine(uploadsFolder, uniquefilename);
+                FileStream fs = new FileStream(filepath, FileMode.Create);
+                pmodel.Photo.CopyTo(fs);
+                fs.Close();
+            }
+
+            return uniquefilename;
         }
 
         // GET: Phones/Delete/5
@@ -151,12 +189,25 @@ namespace EC2_1908764.Controllers
 
             var phones = await _context.Phones
                 .FirstOrDefaultAsync(m => m.ID == id);
+
+            PhoneEditViewModel phoneEditViewModel = new PhoneEditViewModel
+            {
+                ID = phones.ID,
+                Brand = phones.Brand,
+                Model = phones.Model,
+                ManufactureDate = phones.ManufactureDate,
+                Quantity = phones.Quantity,
+                Price = phones.Price,
+                ExistingPhotoPath = phones.Image
+
+            };
+
             if (phones == null)
             {
                 return NotFound();
             }
 
-            return View(phones);
+            return View(phoneEditViewModel);
         }
 
         // POST: Phones/Delete/5
@@ -165,6 +216,19 @@ namespace EC2_1908764.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var phones = await _context.Phones.FindAsync(id);
+
+            PhoneEditViewModel phoneEditViewModel = new PhoneEditViewModel
+            {
+                ExistingPhotoPath = phones.Image
+            };
+
+            if (phoneEditViewModel.ExistingPhotoPath != null)
+            {
+                String filepath = Path.Combine(hostingEnvironment.WebRootPath, "images", "phones", phoneEditViewModel.ExistingPhotoPath);
+                System.IO.File.Delete(filepath);
+
+            }
+
             _context.Phones.Remove(phones);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

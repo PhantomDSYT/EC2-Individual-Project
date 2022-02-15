@@ -4,14 +4,16 @@ using EC2_1908764.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EC2_1908764.Migrations
 {
     [DbContext(typeof(EC2_1908764Context))]
-    partial class EC2_1908764ContextModelSnapshot : ModelSnapshot
+    [Migration("20220215164418_Model to 30")]
+    partial class Modelto30
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
