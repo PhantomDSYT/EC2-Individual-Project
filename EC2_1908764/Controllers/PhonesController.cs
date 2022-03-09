@@ -10,6 +10,7 @@ using EC2_1908764.Models;
 using EC2_1908764.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EC2_1908764.Controllers
 {
@@ -26,12 +27,14 @@ namespace EC2_1908764.Controllers
         }
 
         // GET: Phones
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Phones.ToListAsync());
         }
 
         // GET: Phones/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -237,6 +240,31 @@ namespace EC2_1908764.Controllers
         private bool PhonesExists(int id)
         {
             return _context.Phones.Any(e => e.ID == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Checkout(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var phones = await _context.Phones
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (phones == null)
+            {
+                return NotFound();
+            }
+
+            return View(phones);
+        }
+
+        [HttpPost]
+        public IActionResult Checkout() 
+        { 
+            // Add and implement API for payment gateway (preferably Stripe)
+            return RedirectToAction("Index", "Home"); 
         }
     }
 }

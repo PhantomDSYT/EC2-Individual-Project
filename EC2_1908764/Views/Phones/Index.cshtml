@@ -1,14 +1,15 @@
 ﻿@model IEnumerable<EC2_1908764.Models.Phones>
+@inject SignInManager<ApplicationUser> signInManager;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Catalogue";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Catalogue</h1>
+<h1 class="text-center">Catalogue</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 <div class="card-deck">
     @foreach (var item in Model)
@@ -23,10 +24,17 @@
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Brand) @Html.DisplayFor(modelItem => item.Model)</h5>
                     <h4 class="text-right font-weight-bold card-text">@Html.DisplayFor(modelItem => item.Price)</h4>
                 </div>
-                <div class="card-footer text-right">
-                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-info card-link">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger card-link">Delete</a>
-                </div>
+                @if(signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <div class="card-footer text-right">
+                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-info card-link">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger card-link">Delete</a>
+                    </div>
+                }else
+                {
+                    <a asp-action="checkout" asp-route-id="@item.ID" class="btn btn-success btn-lg btn-block">Purchase</a>
+                }
+                
             </div>
         </div>
     }

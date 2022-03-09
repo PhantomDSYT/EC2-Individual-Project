@@ -6,7 +6,7 @@
     var photoPath = "~/images/phones/" + (Model.Image ?? "noimage.png");
 }
 
-<h1>Details</h1>
+<h1 class="text-center">Details</h1>
 <hr />
 <div class="row">
     <div class="col-lg-6">
@@ -20,6 +20,6 @@
         </h5>
         <h3 class="align-text-bottom py-xl-5 ">@Html.DisplayFor(model => model.Price)</h3>
         <a asp-action="Index" class="btn btn-info btn-lg"> << Return</a>
-        <a class="btn btn-success btn-lg">Purchase</a>
+        <a asp-action="Checkout" asp-route-id="@Model.ID" class="btn btn-success btn-lg">Purchase</a>
     </div>
 </div>
