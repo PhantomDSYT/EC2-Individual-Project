@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewData["Title"] = "Thank You";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center text-success">Purchase Successful</h1>
+<hr />
+
+<div class="text-center text">
+    <h2>Thank you for shopping with <span class="font-italic font-weight-bold">Cellular Kings!</span></h2>
+    <p>You should be redirected to the home page in 15 seconds, if not click 
+        <a asp-action="Index" asp-controller="Home">here</a>
+    </p>
+    <img class="img-fluid" src="~/images/ThankYou.jpg" />
+</div>
+
+<script>
+    window.setTimeout(function(){
+        window.location.href='/home/index';
+    }, 15000);
+</script>

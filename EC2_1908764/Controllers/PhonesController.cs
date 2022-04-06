@@ -34,7 +34,7 @@ namespace EC2_1908764.Controllers
         }
 
         // GET: Phones/Details/5
-        [AllowAnonymous]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,6 +53,7 @@ namespace EC2_1908764.Controllers
         }
 
         // GET: Phones/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -63,6 +64,7 @@ namespace EC2_1908764.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(PhoneCreateViewModel pmodel)
         {
             if (ModelState.IsValid)
@@ -86,6 +88,7 @@ namespace EC2_1908764.Controllers
         }
 
         // GET: Phones/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,6 +122,7 @@ namespace EC2_1908764.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(PhoneEditViewModel pmodel)
         {
             if (!PhonesExists(pmodel.ID))
@@ -183,6 +187,7 @@ namespace EC2_1908764.Controllers
         }
 
         // GET: Phones/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -216,6 +221,7 @@ namespace EC2_1908764.Controllers
         // POST: Phones/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var phones = await _context.Phones.FindAsync(id);
@@ -242,29 +248,5 @@ namespace EC2_1908764.Controllers
             return _context.Phones.Any(e => e.ID == id);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Checkout(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var phones = await _context.Phones
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (phones == null)
-            {
-                return NotFound();
-            }
-
-            return View(phones);
-        }
-
-        [HttpPost]
-        public IActionResult Checkout() 
-        { 
-            // Add and implement API for payment gateway (preferably Stripe)
-            return RedirectToAction("Index", "Home"); 
-        }
     }
 }

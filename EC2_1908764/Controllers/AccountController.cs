@@ -43,12 +43,13 @@ namespace EC2_1908764.Controllers
 
                 if (result.Succeeded)
                 {
+                    await userManager.AddToRoleAsync(user, "Customer");
                     if(signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Administration");
                     }
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    await userManager.AddToRoleAsync(user, "Customer");
+                    
                     return RedirectToAction("Index", "Home");
                 }
 

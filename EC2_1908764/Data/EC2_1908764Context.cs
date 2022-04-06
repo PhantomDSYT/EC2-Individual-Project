@@ -16,5 +16,6 @@ namespace EC2_1908764.Data
         }
 
         public DbSet<EC2_1908764.Models.Phones> Phones { get; set; }
+        public DbSet<EC2_1908764.Models.Orders> Orders { get; set; }
     }
 }
